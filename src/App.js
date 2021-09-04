@@ -46,7 +46,7 @@ const App = () => {
 
 		<div id="menu">
 			<div>
-			<img style={{ opacity: signedIn ? 1 : 0.25 }} src="https://near.org/wp-content/themes/near-19/assets/downloads/near_logo.png"
+			<img style={{ opacity: signedIn ? 1 : 0.25 }, { height: "80px" }, { width: "120px" }} src="https://s3.ap-south-1.amazonaws.com/emartshop.in/near_logo.png" crossOrigin="anonymous"
 					onClick={() => setProfile(!profile)}
 				/>
 			</div>
