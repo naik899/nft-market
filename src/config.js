@@ -1,4 +1,4 @@
-const contractName = 'dev-1630678248018-13338738116772';
+const contractName = 'naik899.testnet';
 
 module.exports = function getConfig() {
 	let config = {

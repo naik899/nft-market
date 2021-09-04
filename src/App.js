@@ -46,7 +46,7 @@ const App = () => {
 
 		<div id="menu">
 			<div>
-				<img style={{ opacity: signedIn ? 1 : 0.25 }} src={Avatar}
+			<img style={{ opacity: signedIn ? 1 : 0.25 }} src="https://near.org/wp-content/themes/near-19/assets/downloads/near_logo.png"
 					onClick={() => setProfile(!profile)}
 				/>
 			</div>
