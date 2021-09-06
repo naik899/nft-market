@@ -8,6 +8,8 @@ import { getMarketStoragePaid, loadItems } from '../state/views';
 import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate } from '../state/actions';
 import { useHistory } from '../utils/history';
 import {Token} from './Token';
+import Card from 'react-bootstrap/Card';
+import { Container, Row, Col } from 'react-bootstrap';
 
 
 const PATH_SPLIT = '?t=';
@@ -108,7 +110,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					<img src={media} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)} />
 					<p>{accountId !== owner_id ? `Owned by ${formatAccountId(owner_id)}` : `You own this!`}</p>
 					{ Object.keys(sale_conditions).length > 0 && <>
-						<h4>Royalties</h4>
+						{/* <h4>Royalties</h4>
 						{
 							Object.keys(royalty).length > 0 ?
 								Object.entries(royalty).map(([receiver, amount]) => <div key={receiver}>
@@ -116,7 +118,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 								</div>)
 								:
 								<p>This token has no royalties.</p>
-						}
+						} */}
 					</>
 					}
 					{
@@ -161,6 +163,8 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 			tab === 2 && <>
 				{!tokens.length && <p className="margin">No NFTs. Try minting something!</p>}
 				{
+					<Container style={{marginTop: '20px'}}><Row>
+{
 					tokens.map(({
 						metadata: { media },
 						owner_id,
@@ -168,11 +172,26 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						sale_conditions = {},
 						bids = {},
 						royalty = {}
-					}) => <div key={token_id} className="item">
-						<img src={media} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)} />
+					}) => 
+					
+					
+	
+
+<Col sm style={{display:'flex' , justifyContent:'center'}}>
+<Card key={token_id} style={{ width: '18rem' }} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)}>
+  <Card.Img height="300" width="300" variant="top" src={media} />
+  <Card.Body>
+    <Card.Title>Image Title</Card.Title>
+	<Card.Subtitle>Price X NEAR </Card.Subtitle>
+    <Card.Text>
+      Some description about the NFT
+    </Card.Text>
+
+  </Card.Body>
+</Card>
 						{
 							marketStoragePaid !== '0' ? <>
-								<h4>Royalties</h4>
+								{/* <h4>Royalties</h4>
 								{
 									Object.keys(royalty).length > 0 ?
 										Object.entries(royalty).map(([receiver, amount]) => <div key={receiver}>
@@ -180,7 +199,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 										</div>)
 										:
 										<p>This token has no royalties.</p>
-								}
+								} */}
 								{
 									Object.keys(sale_conditions).length > 0 && <>
 										<h4>Current Sale Conditions</h4>
@@ -203,7 +222,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 									// 		<button className="pulse-button" onClick={() => handleSaleUpdate(account, token_id)}>Update Sale Conditions</button>
 									// 	</div>
 								}
-								{
+								{/* { 
 									accountId === owner_id && <>
 										<div>
 											<h4>Add Sale Conditions</h4>
@@ -229,7 +248,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 											<i style={{ fontSize: '0.75rem' }}>Note: price 0 means open offers</i>
 										</div>
 									</>
-								}
+								 } */}
 								{
 									Object.keys(bids).length > 0 && <>
 										<h4>Offers</h4>
@@ -249,7 +268,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 									<button onClick={() => handleRegisterStorage(account)}>Register with Market to Sell</button>
 								</div>
 						}
-					</div>)
+					</Col>)
+}
+					</Row></Container>
 				}
 			</>
 		}

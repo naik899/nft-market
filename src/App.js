@@ -9,6 +9,7 @@ import { Gallery } from './components/Gallery';
 import Avatar from 'url:./img/avatar.jpg';
 import NearLogo from 'url:./img/near_icon.svg';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 
 const App = () => {
