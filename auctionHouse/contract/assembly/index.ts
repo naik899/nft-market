@@ -49,7 +49,7 @@
 // 7. Heads - mapped to even number, Tails is mapped to odd number
 // 8. Winning player gets total locked amount
 // 9. Game state is changed to unavailable/complete
-import { context, u128, PersistentVector, PersistentMap, logging, ContractPromiseBatch, RNG} from "near-sdk-as";
+import { context, u128, PersistentVector, PersistentMap, logging, ContractPromiseBatch, RNG, storage} from "near-sdk-as";
 
 /** 
  * Exporting a new class Game so it can be used outside of this file.
@@ -79,6 +79,7 @@ export class AuctionHouse {
 
 export const auctionNfts = new PersistentMap<u32, AuctionHouse>("n");
 export const tokenIds = new PersistentVector<u32>("t");
+export let maxTokenId = 0;
 
 export function addNft(tokenId: u32, owner: string): u32 {
     const nft = new AuctionHouse(tokenId, u128.Zero, owner);
@@ -95,7 +96,6 @@ export function vote(tokenId: u32) : boolean {
       return true;
     }
     return false;
-    
 }
 
 export function getHighestVoted() : u32 {
@@ -122,13 +122,26 @@ export function getHighestVoted() : u32 {
     if(nftMax != null) {
       nftMax.nftState = false;
       auctionNfts.set(maxToken, nftMax);
+      maxTokenId = maxToken;
       return maxToken;
     }
-
     return 0;
     
 }
 
+export function getMaxToken() : u32 {
+  return maxTokenId;
+}
+
+export function getOwner(tokenId : u32) : string {
+  const nft = auctionNfts.get(tokenId);
+  if(nft != null) {
+    return nft.owner;
+  }
+
+  else
+    return "None";
+}
 
 //Getters for all the game variables
 
