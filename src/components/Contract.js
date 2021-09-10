@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import * as nearAPI from 'near-api-js';
-import { handleMint } from '../state/actions';
+import { handleMint, nftApprove, nftTransfer } from '../state/actions';
 import { 
 	isAccountTaken,
 	networkId,

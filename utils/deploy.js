@@ -11,11 +11,11 @@ const {
 /// Manual deployment
 
 // 'vadim-nfts.testnet'
-// near create_account market.naik899.testnet --masterAccount=naik899.testnet --initial-balance 50
-// near deploy --accountId=market.naik899.testnet --wasmFile=./out/market.wasm
-// near deploy --accountId=naik899.testnet --wasmFile=./out/main.wasm
-// near call market.naik899.testnet new '{"owner_id": "naik899.testnet", "ft_token_ids": []}' --accountId=naik899.testnet
-// near call naik899.testnet new '{"owner_id":"naik899.testnet","metadata":{"spec":"name","name":"NFT","symbol":"NFT"},"supply_cap_by_type":{"test": "1000000"}}' --accountId=naik899.testnet
+// near create_account market.gyanlakshmi.testnet --masterAccount=gyanlakshmi.testnet --initial-balance 50
+// near deploy --accountId=market.gyanlakshmi.testnet --wasmFile=./out/market.wasm
+// near deploy --accountId=gyanlakshmi.testnet --wasmFile=./out/main.wasm
+// near call market.gyanlakshmi.testnet new '{"owner_id": "gyanlakshmi.testnet", "ft_token_ids": []}' --accountId=gyanlakshmi.testnet
+// near call gyanlakshmi.testnet new '{"owner_id":"gyanlakshmi.testnet","metadata":{"spec":"name","name":"NFT","symbol":"NFT"},"supply_cap_by_type":{"test": "1000000"}}' --accountId=gyanlakshmi.testnet
 
 const deployAccount = await createOrInitAccount(process.env.DEPLOY_ACCOUNT_ID, process.env.DEPLOY_ACCOUNT_SECRET);
 const contractBytes = fs.readFileSync('./out/main.wasm');
