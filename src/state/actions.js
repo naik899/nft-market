@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { GAS, parseNearAmount, marketId, contractId } from '../state/near';
 
-export const handleMint = async (account, royalties, media, validMedia) => {
+export const handleMint = async (account, royalties, media, validMedia, title, description, minBidAmount) => {
     if (!media.length || !validMedia) {
         alert('Please enter a valid Image Link. You should see a preview below!');
         return;
@@ -14,9 +14,13 @@ export const handleMint = async (account, royalties, media, validMedia) => {
     if (Object.values(perpetual_royalties).reduce((a, c) => a + c, 0) > 2000) {
         return alert('Cannot add more than 20% in perpetual NFT royalties when minting');
     }
-    
+    debugger;
+    const extra = minBidAmount;
     const metadata = { 
         media,
+        title,
+        description,
+        extra,
         issued_at: Date.now().toString()
     };
     const deposit = parseNearAmount('0.1');

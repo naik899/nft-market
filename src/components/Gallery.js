@@ -9,7 +9,7 @@ import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate } from '../s
 import { useHistory } from '../utils/history';
 import {Token} from './Token';
 import Card from 'react-bootstrap/Card';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 
 const PATH_SPLIT = '?t=';
@@ -166,7 +166,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					<Container style={{marginTop: '20px'}}><Row>
 {
 					tokens.map(({
-						metadata: { media },
+						metadata: { media, title, description, extra },
 						owner_id,
 						token_id,
 						sale_conditions = {},
@@ -175,23 +175,22 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					}) => 
 					
 					
-	
-
-<Col sm style={{display:'flex' , justifyContent:'center'}}>
-<Card key={token_id} style={{ width: '18rem' }} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)}>
-  <Card.Img height="300" width="300" variant="top" src={media} />
+<Col sm /* style={{display:'flex' , justifyContent:'center'}} */>
+<Card key={token_id} style={{ width: '18rem', margin: '20px' }} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)}>
+  <Card.Img height="200" width="200" variant="top" src={media} />
   <Card.Body>
-    <Card.Title>Image Title</Card.Title>
-	<Card.Subtitle>Price X NEAR </Card.Subtitle>
+    <Card.Title>{title}<span style={{float:"right", fontStyle:"italic"}}> {extra} Near</span></Card.Title>
+	{/* <Card.Subtitle>Min Bid Price {extra} NEAR</Card.Subtitle> */}
     <Card.Text>
-      Some description about the NFT
+      {description}
     </Card.Text>
-
+	
+	<div><Button variant="primary" disabled="{accountId === owner_id}">Vote</Button><p style={{float:"right", fontStyle:"italic"}}>0 votes</p></div>
   </Card.Body>
 </Card>
-						{
+						{/* {
 							marketStoragePaid !== '0' ? <>
-								{/* <h4>Royalties</h4>
+								<h4>Royalties</h4>
 								{
 									Object.keys(royalty).length > 0 ?
 										Object.entries(royalty).map(([receiver, amount]) => <div key={receiver}>
@@ -199,7 +198,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 										</div>)
 										:
 										<p>This token has no royalties.</p>
-								} */}
+								}
 								{
 									Object.keys(sale_conditions).length > 0 && <>
 										<h4>Current Sale Conditions</h4>
@@ -222,7 +221,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 									// 		<button className="pulse-button" onClick={() => handleSaleUpdate(account, token_id)}>Update Sale Conditions</button>
 									// 	</div>
 								}
-								{/* { 
+								 { 
 									accountId === owner_id && <>
 										<div>
 											<h4>Add Sale Conditions</h4>
@@ -248,8 +247,8 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 											<i style={{ fontSize: '0.75rem' }}>Note: price 0 means open offers</i>
 										</div>
 									</>
-								 } */}
-								{
+								 } 
+								 {
 									Object.keys(bids).length > 0 && <>
 										<h4>Offers</h4>
 										{
@@ -267,7 +266,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 								<div className="center">
 									<button onClick={() => handleRegisterStorage(account)}>Register with Market to Sell</button>
 								</div>
-						}
+						} */}
 					</Col>)
 }
 					</Row></Container>

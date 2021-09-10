@@ -32,7 +32,7 @@ export const Contract = ({ near, update, account }) => {
 
 		<input className="full-width" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
 		<input className="full-width" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-		<input className="full-width" placeholder="MinBidAmount" value={minBidAmount} onChange={(e) => setMinBidAmount(e.target.value)} />
+		<input className="full-width" placeholder="MinBidAmount" value={minBidAmount} onChange={(e) => setMinBidAmount(e.target.value.toString())} />
 		
 		{/* <h4>Royalties</h4>
 		{
@@ -58,7 +58,7 @@ export const Contract = ({ near, update, account }) => {
 
 		<div className="line"></div> */}
 
-		<button onClick={() => handleMint(account, royalties, media, validMedia)}>Mint</button>
+		<button onClick={() => handleMint(account, royalties, media, validMedia, title, description, minBidAmount)}>Mint</button>
 	</>;
 };
 
