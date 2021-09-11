@@ -171,7 +171,8 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 						token_id,
 						sale_conditions = {},
 						bids = {},
-						royalty = {}
+						royalty = {},
+						voteButtonDisabled = owner_id === accountId
 					}) => 
 					
 					
@@ -182,10 +183,16 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
     <Card.Title>{title}<span style={{float:"right", fontStyle:"italic"}}> {extra} Near</span></Card.Title>
 	{/* <Card.Subtitle>Min Bid Price {extra} NEAR</Card.Subtitle> */}
     <Card.Text>
-      {description}
+      {description} {owner_id}
     </Card.Text>
 	
-	<div><Button variant="primary" disabled="{accountId === owner_id}">Vote</Button><p style={{float:"right", fontStyle:"italic"}}>0 votes</p></div>
+	<div>
+		<Button variant="primary" disabled={voteButtonDisabled}
+	onClick={() => console.log("vote button clicked")}>
+		Vote
+		</Button>
+		<p style={{float:"right", fontStyle:"italic"}}>0 votes</p>
+	</div>
   </Card.Body>
 </Card>
 						{/* {
