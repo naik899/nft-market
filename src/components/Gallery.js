@@ -5,7 +5,7 @@ import {
 	formatAccountId,
 } from '../utils/near-utils';
 import { getMarketStoragePaid, loadItems } from '../state/views';
-import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate } from '../state/actions';
+import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate, nftApprove, nftTransfer } from '../state/actions';
 import { useHistory } from '../utils/history';
 import {Token} from './Token';
 import Card from 'react-bootstrap/Card';
@@ -29,7 +29,6 @@ const sortFunctions = {
 	4: (b, a) => n2f(a.sale_conditions?.near || '0') - n2f(b.sale_conditions?.near || '0'),
 };
 
-
 export const Gallery = ({ app, views, update, contractAccount, account, loading, dispatch }) => {
 	if (!contractAccount) return null;
 
@@ -48,8 +47,35 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 	const [ft, setFT] = useState('near');
 	const [saleConditions, setSaleConditions] = useState({});
 
-	useEffect(() => {
+
+	useEffect(async () => {
 		if (!loading) {
+			if(window.location.href.includes("transactionHashes")){
+				const stage = localStorage.getItem("stage");
+				const tokenId = localStorage.getItem("tokenId");
+				
+				if(stage === "mint"){
+					localStorage.setItem("stage", "approve");
+					alert("Inside approval!");
+					debugger;
+					await nftApprove(account, tokenId);
+				}
+				if(stage === "approve"){
+					alert("Inside transfer!");
+					localStorage.setItem("stage", "transfer");
+					debugger;
+					await nftTransfer(account, tokenId);
+				}
+				if(stage === "transfer") {
+					debugger;
+					localStorage.setItem("stage", "auctioned");
+					await window.ah.contract.addNft({ 
+						accountId: window.mp.accountIdMp, 
+						tokenId: tokenId.replace("token-", ""), 
+						owner: account.accountId })
+				}
+
+			}
 			dispatch(loadItems(account))
 			dispatch(getMarketStoragePaid(account))
 		}

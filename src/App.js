@@ -24,7 +24,7 @@ const App = () => {
 	};
 	useEffect(onMount, []);
 
-
+	// alert("Hello World!");
 	const signedIn = ((wallet && wallet.signedIn));
 
 	if (profile && !signedIn) {

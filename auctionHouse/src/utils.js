@@ -1,27 +1,104 @@
-import { connect, Contract, keyStores, WalletConnection } from 'near-api-js'
+import { connect, Contract, keyStores, KeyPair, WalletConnection } from 'near-api-js'
 import getConfig from './config'
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
 
+
+
 // Initialize contract & set global variables
 export async function initContract() {
+
+  //Auction House Contract Initialisation - add auctionHouse json
+
+  debugger;
+const keyStore = new keyStores.InMemoryKeyStore();
+const PRIVATE_KEY =
+  "ed25519:3739iHaKVy3Kriu9v2CJNPqBbD2zuJNKBGeB7rsxriSatkDdXUmxVKD8UjfkxXiZQZGsCFG8bDsYaLK8z9kYLGMg";
+// creates a public / private key pair using the provided private key
+const keyPair = KeyPair.fromString(PRIVATE_KEY);
+// adds the keyPair you created to keyStore
+await keyStore.setKey("testnet", "auction.gyanlakshmi.testnet", keyPair);
   // Initialize connection to the NEAR testnet
-  const near = await connect(Object.assign({ deps: { keyStore: new keyStores.BrowserLocalStorageKeyStore() } }, nearConfig))
+  const config = { 
+    keyStore, // instance of InMemoryKeyStore
+    networkId: 'testnet',
+    nodeUrl: 'https://rpc.testnet.near.org',
+    walletUrl: 'https://wallet.testnet.near.org',
+    helperUrl: 'https://helper.testnet.near.org',
+    explorerUrl: 'https://explorer.testnet.near.org'
+  };
+  
+  // inside an async function
+  const near = await connect(config)
 
   // Initializing Wallet based Account. It can work with NEAR testnet wallet that
   // is hosted at https://wallet.testnet.near.org
-  window.walletConnection = new WalletConnection(near)
+  window.ah = {}
+  const accountAh = await near.account("auction.gyanlakshmi.testnet");
+  //window.ah.walletConnection = new WalletConnection(near)
 
-  // Getting the Account ID. If still unauthorized, it's just empty string
-  window.accountId = window.walletConnection.getAccountId()
+  // // Getting the Account ID. If still unauthorized, it's just empty string
+  window.ah.accountIdAh = accountAh.accountId
 
+
+  debugger;
   // Initializing our contract APIs by contract name and configuration
-  window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
+  window.ah.contract = await new Contract(accountAh, "auction.gyanlakshmi.testnet", {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['getGreeting'],
+    viewMethods: ['getHighestVoted', 'getMaxToken', 'getOwner', 'getActiveAuctionsVotes', 'getActiveAuctionsTokenIds'],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['setGreeting'],
+    changeMethods: ['addNft', 'vote'],
   })
+
+  await initContract2();
+}
+
+
+export async function initContract2() {
+
+  //Marketplace Contract Initialisation - add marketplace json
+const keyStore = new keyStores.InMemoryKeyStore();
+const PRIVATE_KEY =
+  "ed25519:39CMPv7zEujycEEQEBAUjbQotr6idaDYmqjA6HyPqJvSmwtc5ivu3EcbSj5gCmb2mJYwfD1z17sNX4x7DUskBRca";
+// creates a public / private key pair using the provided private key
+const keyPair = KeyPair.fromString(PRIVATE_KEY);
+// adds the keyPair you created to keyStore
+await keyStore.setKey("testnet", "market.gyanlakshmi.testnet", keyPair);
+  debugger;
+  // Initialize connection to the NEAR testnet
+  const config = { 
+    keyStore, // instance of InMemoryKeyStore
+    networkId: 'testnet',
+    nodeUrl: 'https://rpc.testnet.near.org',
+    walletUrl: 'https://wallet.testnet.near.org',
+    helperUrl: 'https://helper.testnet.near.org',
+    explorerUrl: 'https://explorer.testnet.near.org'
+  };
+
+  // Initializing Wallet based Account. It can work with NEAR testnet wallet that
+  // is hosted at https://wallet.testnet.near.org
+
+  const near = await connect(config)
+
+  // Initializing Wallet based Account. It can work with NEAR testnet wallet that
+  // is hosted at https://wallet.testnet.near.org
+  window.mp = {}
+  const accountMp = await near.account("market.gyanlakshmi.testnet");
+  //window.ah.walletConnection = new WalletConnection(near)
+
+  // // Getting the Account ID. If still unauthorized, it's just empty string
+  window.mp.accountIdMp = accountMp.accountId
+
+
+  debugger;
+  // Initializing our contract APIs by contract name and configuration
+  window.mp.contract = await new Contract(accountMp, "market.gyanlakshmi.testnet", {
+    // View methods are read only. They don't modify the state, but usually return some value.
+    viewMethods: ['getHighestVoted', 'getMaxToken', 'getOwner', 'getActiveAuctionsVotes', 'getActiveAuctionsTokenIds'],
+    // Change methods can modify the state. But you don't receive the returned value when called.
+    changeMethods: ['addNft', 'vote'],
+  })
+
 }
 
 export function logout() {

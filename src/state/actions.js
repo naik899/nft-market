@@ -24,12 +24,44 @@ export const handleMint = async (account, royalties, media, validMedia, title, d
         issued_at: Date.now().toString()
     };
     const deposit = parseNearAmount('0.1');
-    await account.functionCall(contractId, 'nft_mint', {
-        token_id: 'token-' + Date.now(),
-        metadata,
-        perpetual_royalties
-    }, GAS, deposit);
+    const tokenId = 'token-' + Date.now();
+
+    // localStorage.clear();
+    localStorage.setItem("tokenId", tokenId);
+    localStorage.setItem("stage", "mint");
+
+    try {
+        debugger;
+        await account.functionCall(contractId, 'nft_mint', {
+            token_id: tokenId,
+            metadata,
+            perpetual_royalties
+        }, GAS, deposit);
+        
+    }
+    catch {
+
+        console.log("In Catch Block");
+    }
 };
+
+
+export const nftApprove = async (account, token_id) => {
+    debugger;
+    await account.functionCall(contractId, 'nft_approve', {
+        token_id: token_id,
+        account_id: marketId
+    }, GAS, parseNearAmount('0.01'));
+};
+
+export const nftTransfer = async (account, tokenId) => {
+    const FT_TRANSFER_DEPOSIT = '1';
+    await account.functionCall(contractId, 'nft_transfer', {
+            receiver_id: marketId,
+            token_id: tokenId
+        }, GAS, FT_TRANSFER_DEPOSIT);
+};
+
 
 export const handleAcceptOffer = async (account, token_id, ft_token_id) => {
     if (ft_token_id !== 'near') {
@@ -44,6 +76,7 @@ export const handleAcceptOffer = async (account, token_id, ft_token_id) => {
 
 export const handleRegisterStorage = async (account) => {
     // WARNING this just pays for 10 "spots" to sell NFTs in marketplace vs. paying each time
+    // TBD - we need to make this call before settiing the NFT up for sale in the marketplace
     await account.functionCall(
         marketId,
         'storage_deposit',

@@ -58,10 +58,10 @@ import { context, u128, PersistentVector, PersistentMap, logging, ContractPromis
 export class AuctionHouse {
     nftState: boolean;
     price: u128;
-    tokenId: u32;
+    tokenId: string;
     votes: u32;
     owner: string;
-    constructor(_tokenId: u32, _price: u128, _owner: string) {
+    constructor(_tokenId: string, _price: u128, _owner: string) {
 
         /*
         Generates a random number for the gameId.
@@ -77,18 +77,18 @@ export class AuctionHouse {
 
 }
 
-export const auctionNfts = new PersistentMap<u32, AuctionHouse>("n");
-export const tokenIds = new PersistentVector<u32>("t");
-export let maxTokenId = 0;
+export const auctionNfts = new PersistentMap<string, AuctionHouse>("n");
+export const tokenIds = new PersistentVector<string>("t");
+export let maxTokenId:string = "None";
 
-export function addNft(tokenId: u32, owner: string): u32 {
+export function addNft(tokenId: string, owner: string): string {
     const nft = new AuctionHouse(tokenId, u128.Zero, owner);
     auctionNfts.set(tokenId, nft);
     tokenIds.push(tokenId);
     return nft.tokenId;
 }
 
-export function vote(tokenId: u32) : boolean {
+export function vote(tokenId: string) : boolean {
     const nft = auctionNfts.get(tokenId);
     if(nft != null){
       nft.votes = nft.votes+1;
@@ -98,13 +98,13 @@ export function vote(tokenId: u32) : boolean {
     return false;
 }
 
-export function getHighestVoted() : u32 {
+export function getHighestVoted() : string {
 
     let maxToken = tokenIds[0];
     for( let i=0; i < tokenIds.length; i++) {
         const token = tokenIds[i];
         const nft = auctionNfts.get(token);
-        let maxVotes = 0;
+        let maxVotes:u32 = 0;
         if(nft != null) {
           if(nft.nftState == true){
             if(nft.votes > maxVotes){
@@ -125,15 +125,15 @@ export function getHighestVoted() : u32 {
       maxTokenId = maxToken;
       return maxToken;
     }
-    return 0;
+    return "None";
     
 }
 
-export function getMaxToken() : u32 {
+export function getMaxToken() : string {
   return maxTokenId;
 }
 
-export function getOwner(tokenId : u32) : string {
+export function getOwner(tokenId : string) : string {
   const nft = auctionNfts.get(tokenId);
   if(nft != null) {
     return nft.owner;
@@ -146,9 +146,9 @@ export function getOwner(tokenId : u32) : string {
 //Getters for all the game variables
 
 //Returns all the active games which have been created
-export function getActiveAuctions(): Array<u32> {
+export function getActiveAuctionsTokenIds(): Array<string> {
   
-  let tempAuctionMap = new Array<u32>();
+  let tempAuctionMap = new Array<string>();
 
   for(let i =0; i< tokenIds.length; i++){
       const nft = auctionNfts.get(tokenIds[i]);
@@ -163,7 +163,25 @@ export function getActiveAuctions(): Array<u32> {
   return tempAuctionMap;
 }
 
-export function calculatePrice(tokenId : u32) : u128 {
+//Returns all the active games which have been created
+export function getActiveAuctionsVotes(): Array<u32> {
+  
+  let tempAuctionMap = new Array<u32>();
+
+  for(let i =0; i< tokenIds.length; i++){
+      const nft = auctionNfts.get(tokenIds[i]);
+
+      if(nft != null){
+        if(nft.nftState == true){
+          tempAuctionMap.push(nft.votes)
+        }
+      }
+
+  }
+  return tempAuctionMap;
+}
+
+export function calculatePrice(tokenId : string) : u128 {
     const nft = auctionNfts.get(tokenId);
     if(nft != null){
       const price = u128.fromU32(nft.votes*10);
