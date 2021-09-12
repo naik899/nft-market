@@ -5,7 +5,7 @@ import {
 	formatAccountId,
 } from '../utils/near-utils';
 import { getMarketStoragePaid, loadItems } from '../state/views';
-import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate, nftApprove, nftTransfer } from '../state/actions';
+import { handleAcceptOffer, handleRegisterStorage, handleSaleUpdate, nftApprove, nftTransfer, nftVote } from '../state/actions';
 import { useHistory } from '../utils/history';
 import {Token} from './Token';
 import Card from 'react-bootstrap/Card';
@@ -214,7 +214,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 	
 	<div>
 		<Button variant="primary" disabled={voteButtonDisabled}
-	onClick={() => console.log("vote button clicked")}>
+	onClick={() => nftVote(account, token_id)}>
 		Vote
 		</Button>
 		<p style={{float:"right", fontStyle:"italic"}}>0 votes</p>

@@ -14,7 +14,7 @@ export const handleMint = async (account, royalties, media, validMedia, title, d
     if (Object.values(perpetual_royalties).reduce((a, c) => a + c, 0) > 2000) {
         return alert('Cannot add more than 20% in perpetual NFT royalties when minting');
     }
-    debugger;
+    
     const extra = minBidAmount;
     const metadata = { 
         media,
@@ -31,7 +31,7 @@ export const handleMint = async (account, royalties, media, validMedia, title, d
     localStorage.setItem("stage", "mint");
 
     try {
-        debugger;
+      
         await account.functionCall(contractId, 'nft_mint', {
             token_id: tokenId,
             metadata,
@@ -45,9 +45,20 @@ export const handleMint = async (account, royalties, media, validMedia, title, d
     }
 };
 
+// vote action
+export const nftVote = async (account, token_id) => {
+    await account.functionCall("auction.gyanlakshmi.testnet", 'vote', {
+        tokenId: token_id
+    });
+};
+
+//TODO
+export const nftGetVote = async (account, token_id) => {
+    const data = await account.viewFunction("auction.gyanlakshmi.testnet", 'active-auction-votes');
+    return data[token_id]
+};
 
 export const nftApprove = async (account, token_id) => {
-    debugger;
     await account.functionCall(contractId, 'nft_approve', {
         token_id: token_id,
         account_id: marketId

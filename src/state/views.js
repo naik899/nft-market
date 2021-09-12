@@ -26,6 +26,21 @@ export const loadItems = (account) => async ({ update, getState }) => {
 	
     /// user tokens
     let tokens = []
+
+    tokens = await contractAccount.viewFunction(contractId, 'nft_tokens', {
+        from_index: '0',
+        limit: 50
+    });
+
+    tokens = tokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
+
+    update('views', { tokens})
+    return { tokens }
+};
+
+
+/* 
+
     if (account) {
         const { accountId } = account
         tokens = await contractAccount.viewFunction(contractId, 'nft_tokens_for_owner', {
@@ -124,5 +139,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
     allTokens = allTokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
 
     update('views', { tokens, sales, allTokens })
-    return { tokens, sales, allTokens }
+    return { tokens, sales, allTokens } 
 };
+*/
+
