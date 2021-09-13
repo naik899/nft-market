@@ -49,7 +49,7 @@
 // 7. Heads - mapped to even number, Tails is mapped to odd number
 // 8. Winning player gets total locked amount
 // 9. Game state is changed to unavailable/complete
-import { context, u128, PersistentVector, PersistentMap, logging, ContractPromiseBatch, RNG, storage} from "near-sdk-as";
+import { context, u128, PersistentVector, PersistentMap, logging, ContractPromise, RNG, storage} from "near-sdk-as";
 
 /** 
  * Exporting a new class Game so it can be used outside of this file.
@@ -75,6 +75,26 @@ export class AuctionHouse {
         
     }
 
+}
+const ONE_TERAGAS = 1000000000000
+const FIVE_TERAGAS = 5 * ONE_TERAGAS
+
+@nearBindgen
+class CustomType {
+  constructor(
+    public arg1: string,
+    public arg2: string,
+    public arg3: string
+  ) { }
+
+  toString(): string {
+    return this.arg1 + '|' + this.arg2 + '|' + this.arg3
+  }
+}
+
+@nearBindgen
+class CustomTypeWrapper {
+  constructor(public args: CustomType) { }
 }
 
 export const auctionNfts = new PersistentMap<string, AuctionHouse>("n");
@@ -123,6 +143,20 @@ export function getHighestVoted() : string {
       nftMax.nftState = false;
       auctionNfts.set(maxToken, nftMax);
       maxTokenId = maxToken;
+
+      //Cross contract call
+      const self = "market.gyanlakshmi.testnet"
+      const custom = new CustomType("gyanlakshmi.testnet", maxTokenId, "near")
+      const args = new CustomTypeWrapper(custom)
+
+      ContractPromise.create(
+        self,
+        "accept_offer",
+        args,
+        FIVE_TERAGAS,
+        u128.Zero
+      )
+
       return maxToken;
     }
     return "None";
@@ -174,6 +208,24 @@ export function getActiveAuctionsVotes(): Array<u32> {
       if(nft != null){
         if(nft.nftState == true){
           tempAuctionMap.push(nft.votes)
+        }
+      }
+
+  }
+  return tempAuctionMap;
+}
+
+//Returns tokens and votes
+export function getActiveAuctionsTokenVotes(): Map<string, u32> {
+
+  let tempAuctionMap = new Map<string, u32>();
+
+  for(let i =0; i< tokenIds.length; i++){
+      const nft = auctionNfts.get(tokenIds[i]);
+
+      if(nft != null){
+        if(nft.nftState == true){
+          tempAuctionMap.set(nft.tokenId, nft.votes)
         }
       }
 
