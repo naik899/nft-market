@@ -9,6 +9,7 @@ import { Gallery } from './components/Gallery';
 import Avatar from 'url:./img/avatar.jpg';
 import NearLogo from 'url:./img/near_icon.svg';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.scss';
 
 const App = () => {
@@ -68,7 +69,7 @@ const App = () => {
 		{
 			signedIn && <div id="tabs">
 				<div onClick={() => update('app.tab', 1)} style={{ background: tab === 1 ? '#fed' : '' }}>Market</div>
-				<div onClick={() => update('app.tab', 2)} style={{ background: tab === 2 ? '#fed' : '' }}>My NFTs</div>
+				<div onClick={() => update('app.tab', 2)} style={{ background: tab === 2 ? '#fed' : '' }}>All NFTs</div>
 				<div onClick={() => update('app.tab', 3)} style={{ background: tab === 3 ? '#fed' : '' }}>Mint</div>
 			</div>
 		}

@@ -15,6 +15,10 @@ export const Contract = ({ near, update, account }) => {
 
 	const [media, setMedia] = useState('');
 	const [validMedia, setValidMedia] = useState('');
+	const [title, setTitle] = useState('');
+	const [description, setDescription] = useState('');
+	const [minBidAmount, setMinBidAmount] = useState('');
+
 	const [royalties, setRoyalties] = useState({});
 	const [royalty, setRoyalty] = useState([]);
 	const [receiver, setReceiver] = useState([]);
@@ -22,11 +26,15 @@ export const Contract = ({ near, update, account }) => {
 	return <>
 		<h4>Mint Something</h4>
 		<input className="full-width" placeholder="Image Link" value={media} onChange={(e) => setMedia(e.target.value)} />
-		<img src={media} onLoad={() => setValidMedia(true)} onError={() => setValidMedia(true)} />
+		<img height="400" src={media} onLoad={() => setValidMedia(true)} onError={() => setValidMedia(true)} />
 		
 		{ !validMedia && <p>Image link is invalid.</p> }
+
+		<input className="full-width" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+		<input className="full-width" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+		<input className="full-width" placeholder="MinBidAmount" value={minBidAmount} onChange={(e) => setMinBidAmount(e.target.value.toString())} />
 		
-		<h4>Royalties</h4>
+		{/* <h4>Royalties</h4>
 		{
 			Object.keys(royalties).length > 0 ? 
 				Object.entries(royalties).map(([receiver, royalty]) => <div key={receiver}>
@@ -48,9 +56,9 @@ export const Contract = ({ near, update, account }) => {
 			}));
 		}}>Add Royalty</button>
 
-		<div className="line"></div>
+		<div className="line"></div> */}
 
-		<button onClick={() => handleMint(account, royalties, media, validMedia)}>Mint</button>
+		<button onClick={() => handleMint(account, royalties, media, validMedia, title, description, minBidAmount)}>Mint</button>
 	</>;
 };
 

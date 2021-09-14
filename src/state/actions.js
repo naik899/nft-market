@@ -1,7 +1,7 @@
 import BN from 'bn.js'
 import { GAS, parseNearAmount, marketId, contractId } from '../state/near';
 
-export const handleMint = async (account, royalties, media, validMedia) => {
+export const handleMint = async (account, royalties, media, validMedia, title, description, minBidAmount) => {
     if (!media.length || !validMedia) {
         alert('Please enter a valid Image Link. You should see a preview below!');
         return;
@@ -15,8 +15,12 @@ export const handleMint = async (account, royalties, media, validMedia) => {
         return alert('Cannot add more than 20% in perpetual NFT royalties when minting');
     }
     
+    const extra = minBidAmount;
     const metadata = { 
         media,
+        title,
+        description,
+        extra,
         issued_at: Date.now().toString()
     };
     const deposit = parseNearAmount('0.1');
@@ -27,7 +31,7 @@ export const handleMint = async (account, royalties, media, validMedia) => {
     localStorage.setItem("stage", "mint");
 
     try {
-        debugger;
+      
         await account.functionCall(contractId, 'nft_mint', {
             token_id: tokenId,
             metadata,
@@ -41,9 +45,20 @@ export const handleMint = async (account, royalties, media, validMedia) => {
     }
 };
 
+// vote action
+export const nftVote = async (account, token_id) => {
+    await account.functionCall("auction.gyanlakshmi.testnet", 'vote', {
+        tokenId: token_id
+    });
+};
+
+//TODO
+export const nftGetVote = async (account, token_id) => {
+    const data = await account.viewFunction("auction.gyanlakshmi.testnet", 'active-auction-votes');
+    return data[token_id]
+};
 
 export const nftApprove = async (account, token_id) => {
-    debugger;
     await account.functionCall(contractId, 'nft_approve', {
         token_id: token_id,
         account_id: marketId
