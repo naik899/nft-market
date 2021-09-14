@@ -6,7 +6,7 @@ const BAD_OWNER_ID = [];
 const domain = 'https://helper.nearapi.org';
 const batchPath = domain + '/v1/batch/';
 const headers = new Headers({
-	'max-age': '300'
+    'max-age': '300'
 });
 
 const ADD_SALE = '__ADD_SALE';
@@ -23,7 +23,7 @@ export const getMarketStoragePaid = (account) => async ({ update, getState }) =>
 export const loadItems = (account) => async ({ update, getState }) => {
 
     const { contractAccount } = getState()
-	
+
     /// user tokens
     let tokens = []
 
@@ -34,12 +34,16 @@ export const loadItems = (account) => async ({ update, getState }) => {
 
     tokens = tokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
 
-    update('views', { tokens})
-    return { tokens }
+    let maxVotedTokenId = await contractAccount.viewFunction("auction.gyanlakshmi.testnet", 'getMaxToken');
+    console.log("max voted token id is " + maxVotedTokenId)
+    const maxVotedTokens = tokens.filter(({ token_id }) => maxVotedTokenId === token_id)
+
+    update('views', { tokens, maxVotedTokens })
+    return { tokens, maxVotedTokens }
 };
 
 
-/* 
+/*
 
     if (account) {
         const { accountId } = account
@@ -93,7 +97,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
             limit: 50
         });
     }
-    
+
     const saleTokens = await contractAccount.viewFunction(contractId, 'nft_tokens_batch', {
         token_ids: sales.filter(({ nft_contract_id }) => nft_contract_id === contractId).map(({ token_id }) => token_id)
     });
@@ -139,7 +143,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
     allTokens = allTokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
 
     update('views', { tokens, sales, allTokens })
-    return { tokens, sales, allTokens } 
+    return { tokens, sales, allTokens }
 };
 */
 
