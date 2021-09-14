@@ -13,7 +13,8 @@ const {
 // 'vadim-nfts.testnet'
 // near create_account market.gyanlakshmi.testnet --masterAccount=gyanlakshmi.testnet --initial-balance 50
 // near deploy --accountId=market.gyanlakshmi.testnet --wasmFile=./out/market.wasm
-// near deploy --accountId=gyanlakshmi.testnet --wasmFile=./out/main.wasm
+// near deploy --accountId=market.gyanlakshmi.testnet --wasmFile=./out/market.wasm
+// near deploy --accountId=auction.gyanlakshmi.testnet --wasmFile=./out/main.wasm
 // near call market.gyanlakshmi.testnet new '{"owner_id": "gyanlakshmi.testnet", "ft_token_ids": []}' --accountId=gyanlakshmi.testnet
 // near call gyanlakshmi.testnet new '{"owner_id":"gyanlakshmi.testnet","metadata":{"spec":"name","name":"NFT","symbol":"NFT"},"supply_cap_by_type":{"test": "1000000"}}' --accountId=gyanlakshmi.testnet
 
