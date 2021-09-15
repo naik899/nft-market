@@ -32,14 +32,20 @@ export const loadItems = (account) => async ({ update, getState }) => {
         limit: 50
     });
 
+    let currentVotes = new Map();
+    //todo
+    currentVotes.set('token-1631642884285', 5);
+
+    //let currentVotes = await contractAccount.viewFunction("auction.gyanlakshmi.testnet", 'getActiveAuctionsTokenVotes');
+
     tokens = tokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
 
     let maxVotedTokenId = await contractAccount.viewFunction("auction.gyanlakshmi.testnet", 'getMaxToken');
     console.log("max voted token id is " + maxVotedTokenId)
     const maxVotedTokens = tokens.filter(({ token_id }) => maxVotedTokenId === token_id)
 
-    update('views', { tokens, maxVotedTokens })
-    return { tokens, maxVotedTokens }
+    update('views', { tokens, maxVotedTokens, currentVotes })
+    return { tokens, maxVotedTokens, currentVotes }
 };
 
 
