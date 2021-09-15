@@ -60,6 +60,12 @@ export const nftApprove = async (account, token_id) => {
     }, GAS, parseNearAmount('0.01'));
 };
 
+export const getSaleInfo = async (account, token_id) => {
+    const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + "||" + token_id }).catch(() => { });
+    
+    return sale.bids;
+};
+
 export const nftTransfer = async (account, tokenId) => {
     const FT_TRANSFER_DEPOSIT = '1';
     await account.functionCall(contractId, 'nft_transfer', {
@@ -92,17 +98,26 @@ export const handleRegisterStorage = async (account) => {
     )
 };
 
+
+
 export const handleSaleUpdate = async (account, token_id, newSaleConditions) => {
     debugger
-    const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + ":" + token_id }).catch(() => { });
+    const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + "||" + token_id }).catch(() => { });
+    debugger;
     if (sale) {
         
+       // await nftApprove(account, token_id);
+
+       if(sale.sale_conditions.near != newSaleConditions.near)
+       {
         await account.functionCall(marketId, 'update_price', {
             nft_contract_id: contractId,
             token_id,
-            ft_token_id: newSaleConditions[0].ft_token_id,
-            price: newSaleConditions[0].price
+            ft_token_id: "near",
+            price: newSaleConditions.near
         }, GAS);
+       }
+        
     } else {
         await account.functionCall(contractId, 'nft_approve', {
             token_id,

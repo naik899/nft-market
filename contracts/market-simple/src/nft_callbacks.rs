@@ -53,11 +53,11 @@ impl NonFungibleTokenApprovalsReceiver for Contract {
         let storage_amount = self.storage_amount().0;
         let owner_paid_storage = self.storage_deposits.get(&signer_id).unwrap_or(0);
         let signer_storage_required = (self.get_supply_by_owner_id(signer_id).0 + 1) as u128 * storage_amount;
-        assert!(
-            owner_paid_storage >= signer_storage_required,
-            "Insufficient storage paid: {}, for {} sales at {} rate of per sale",
-            owner_paid_storage, signer_storage_required / STORAGE_PER_SALE, STORAGE_PER_SALE
-        );
+        // assert!(
+        //     owner_paid_storage >= signer_storage_required,
+        //     "Insufficient storage paid: {}, for {} sales at {} rate of per sale",
+        //     owner_paid_storage, signer_storage_required / STORAGE_PER_SALE, STORAGE_PER_SALE
+        // );
 
         let SaleArgs { sale_conditions, token_type, is_auction } =
             near_sdk::serde_json::from_str(&msg).expect("Not valid SaleArgs");
@@ -104,10 +104,10 @@ impl NonFungibleTokenApprovalsReceiver for Contract {
         });
 
         let owner_occupied_storage = u128::from(by_owner_id.len()) * STORAGE_PER_SALE;
-        assert!(
-            owner_paid_storage > owner_occupied_storage,
-            "User has more sales than storage paid"
-        );
+        // assert!(
+        //     owner_paid_storage > owner_occupied_storage,
+        //     "User has more sales than storage paid"
+        // );
         by_owner_id.insert(&contract_and_token_id);
         self.by_owner_id.insert(owner_id.as_ref(), &by_owner_id);
 
