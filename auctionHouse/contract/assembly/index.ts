@@ -143,24 +143,28 @@ export function getHighestVoted() : string {
       nftMax.nftState = false;
       auctionNfts.set(maxToken, nftMax);
       maxTokenId = maxToken;
-
-      //Cross contract call
-      const self = "market.gyanlakshmi.testnet"
-      const custom = new CustomType("gyanlakshmi.testnet", maxTokenId, "near")
-      const args = new CustomTypeWrapper(custom)
-
-      ContractPromise.create(
-        self,
-        "accept_offer",
-        args,
-        FIVE_TERAGAS,
-        u128.Zero
-      )
-
       return maxToken;
     }
     return "None";
     
+}
+
+export function closeAuction(marketId: string, contractId: string): bool {
+  //Cross contract call
+  const self = marketId
+  const custom = new CustomType(contractId, maxTokenId, "near")
+  const args = new CustomTypeWrapper(custom)
+
+  ContractPromise.create(
+    self,
+    "accept_offer",
+    args,
+    FIVE_TERAGAS,
+    u128.Zero
+  )
+
+
+  return true;
 }
 
 export function getMaxToken() : string {
