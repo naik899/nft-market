@@ -36,16 +36,17 @@ impl NonFungibleTokenApprovalsReceiver for Contract {
 
         let nft_contract_id = env::predecessor_account_id();
         let signer_id = env::signer_account_id();
-        assert_ne!(
-            nft_contract_id,
-            signer_id,
-            "nft_on_approve should only be called via cross-contract call"
-        );
-        assert_eq!(
-            owner_id.as_ref(),
-            &signer_id,
-            "owner_id should be signer_id"
-        );
+        //abhishek more: commenting out, to approve market by market
+        // assert_ne!(
+        //     nft_contract_id,
+        //     signer_id,
+        //     "nft_on_approve should only be called via cross-contract call"
+        // );
+        // assert_eq!(
+        //     owner_id.as_ref(),
+        //     &signer_id,
+        //     "owner_id should be signer_id"
+        // );
 
         // enforce signer's storage is enough to cover + 1 more sale 
 

@@ -52,11 +52,6 @@ export const nftVote = async (account, token_id) => {
     });
 };
 
-//TODO
-export const nftGetVote = async (account, token_id) => {
-    const data = await account.viewFunction("auction.gyanlakshmi.testnet", 'active-auction-votes');
-    return data[token_id]
-};
 
 export const nftApprove = async (account, token_id) => {
     await account.functionCall(contractId, 'nft_approve', {
@@ -98,8 +93,10 @@ export const handleRegisterStorage = async (account) => {
 };
 
 export const handleSaleUpdate = async (account, token_id, newSaleConditions) => {
+    debugger
     const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + ":" + token_id }).catch(() => { });
     if (sale) {
+        
         await account.functionCall(marketId, 'update_price', {
             nft_contract_id: contractId,
             token_id,
