@@ -1,4 +1,4 @@
-const contractName = 'gyanlakshmi.testnet';
+const contractName = 'abhimore.testnet';
 
 module.exports = function getConfig() {
 	let config = {
