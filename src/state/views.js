@@ -32,11 +32,8 @@ export const loadItems = (account) => async ({ update, getState }) => {
         limit: 50
     });
 
-    let currentVotes = new Map();
-    //todo
-    currentVotes.set('token-1631642884285', 5);
-
-    //let currentVotes = await contractAccount.viewFunction("auction.gyanlakshmi.testnet", 'getActiveAuctionsTokenVotes');
+   // let currentVotes1 = await window.ah..viewFunction("auction.gyanlakshmi.testnet", 'getActiveAuctionsTokenVotes');
+const currentVotes = await window.ah.contract.getActiveAuctionsTokenVotes();
 
     tokens = tokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
 

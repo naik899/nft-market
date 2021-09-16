@@ -146,8 +146,6 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 	let myTokens = []
 
 	if (tokens.length) {
-
-		debugger
 		myTokens.push(tokens[0])
 		//myTokens.push(tokens.find(r => r.token_id === 'token-1631718110381'))
 	}
@@ -279,7 +277,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 								bids = {},
 								royalty = {},
 								voteButtonDisabled = owner_id === accountId,
-								myVote = currentVotes.get(token_id)
+								myVote = currentVotes[token_id.replace("token-", "")]
 							}) =>
 
 

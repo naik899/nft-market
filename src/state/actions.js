@@ -47,8 +47,10 @@ export const handleMint = async (account, royalties, media, validMedia, title, d
 
 // vote action
 export const nftVote = async (account, token_id) => {
+    debugger
+    const tId = token_id.replace("token-", "")
     await account.functionCall("auction.gyanlakshmi.testnet", 'vote', {
-        tokenId: token_id
+        tokenId: tId
     });
 };
 
