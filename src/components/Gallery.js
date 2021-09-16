@@ -9,7 +9,7 @@ import { getSaleInfo, handleAcceptOffer, handleRegisterStorage, handleSaleUpdate
 import { useHistory } from '../utils/history';
 import { Token } from './Token';
 import Card from 'react-bootstrap/Card';
-import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Button, Badge, Toast } from 'react-bootstrap';
 
 
 const PATH_SPLIT = '?t=';
@@ -57,7 +57,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 				if (stage === "mint") {
 					localStorage.setItem("stage", "approve");
-					alert("Inside approval!");
+					alert("Inside approval!"); 
 
 					await nftApprove(account, tokenId);
 				}
@@ -89,7 +89,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					// sales conditions add.
 					const newSaleConditions = {
 						...saleConditions,
-						[ft]: parseNearAmount('2')
+						[ft]: parseNearAmount('1')
 					}
 					setSaleConditions(newSaleConditions);
 					setPrice('');
