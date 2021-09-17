@@ -317,6 +317,11 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 											</Card.Text>
 
 											<div>
+											<Button variant="secondary" style={{ backgroundColor: "#0072CE", float: "left" }} disabled={!voteButtonDisabled}
+													>
+													Claim
+												</Button>
+
 												<Button variant="primary" style={{ backgroundColor: "#0072CE", float: "right" }} disabled={voteButtonDisabled}
 													onClick={() => nftVote(account, token_id)}>
 													Vote
