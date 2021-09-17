@@ -59,7 +59,7 @@ export class AuctionHouse {
     nftState: boolean;
     price: u128;
     tokenId: string;
-    votes: u32;
+    votes: i32;
     owner: string;
     constructor(_tokenId: string, _price: u128, _owner: string) {
 
@@ -99,7 +99,11 @@ class CustomTypeWrapper {
 
 export const auctionNfts = new PersistentMap<string, AuctionHouse>("n");
 export const tokenIds = new PersistentVector<string>("t");
-export let maxTokenId:string = "None";
+export const maxTokenId = new PersistentVector<string>("mt1");
+export const maxVotes = new PersistentVector<i32>("mv1");
+// export let maxTokenId:string = "None";
+// export let maxVotes:i32 = 0;
+
 
 export function addNft(tokenId: string, owner: string): string {
     const nft = new AuctionHouse(tokenId, u128.Zero, owner);
@@ -108,67 +112,86 @@ export function addNft(tokenId: string, owner: string): string {
     return nft.tokenId;
 }
 
-export function vote(tokenId: string) : boolean {
+export function vote(tokenId: string) : i32 {
     const nft = auctionNfts.get(tokenId);
+    
     if(nft != null){
       nft.votes = nft.votes+1;
+      if(maxVotes.isEmpty){
+        maxVotes.push(nft.votes);
+        maxTokenId.push(tokenId);
+      }
+      else if(nft.votes > maxVotes.first){
+        maxVotes.pop();
+        maxVotes.push(nft.votes);
+        maxTokenId.pop();
+        maxTokenId.push(tokenId);
+      }
       auctionNfts.set(tokenId, nft);
-      return true;
+      
+      return maxVotes.first;
     }
-    return false;
+    return 0;
 }
 
-export function getHighestVoted() : string {
+// export function getHighestVoted() : string {
 
-    let maxToken = tokenIds[0];
-    for( let i=0; i < tokenIds.length; i++) {
-        const token = tokenIds[i];
-        const nft = auctionNfts.get(token);
-        let maxVotes:u32 = 0;
-        if(nft != null) {
-          if(nft.nftState == true){
-            if(nft.votes > maxVotes){
-                maxVotes = nft.votes;
-                maxToken = nft.tokenId;
-            }
-        }
-        }
-        else {
-          logging.log("NFT is null");
-        }
+//     let maxToken = tokenIds[0];
+//     for( let i=0; i < tokenIds.length; i++) {
+//         const token = tokenIds[i];
+//         const nft = auctionNfts.get(token);
+//         let maxVotes:u32 = 0;
+//         if(nft != null) {
+//           if(nft.nftState == true){
+//             if(nft.votes > maxVotes){
+//                 maxVotes = nft.votes;
+//                 maxToken = nft.tokenId;
+//             }
+//         }
+//         }
+//         else {
+//           logging.log("NFT is null");
+//         }
         
-    }
-    const nftMax = auctionNfts.get(maxToken);
-    if(nftMax != null) {
-      nftMax.nftState = false;
-      auctionNfts.set(maxToken, nftMax);
-      maxTokenId = maxToken;
-      return maxToken;
-    }
-    return "None";
+//     }
+//     const nftMax = auctionNfts.get(maxToken);
+//     if(nftMax != null) {
+//       nftMax.nftState = false;
+//       auctionNfts.set(maxToken, nftMax);
+//       maxTokenId = maxToken;
+//       return maxToken;
+//     }
+//     return "None";
     
-}
+// }
 
 export function closeAuction(marketId: string, contractId: string): bool {
   //Cross contract call
   const self = marketId
-  const custom = new CustomType(contractId, maxTokenId, "near")
+  const token = "token-"+maxTokenId.first;
+  const custom = new CustomType(contractId, token, "near");
+  
   const args = new CustomTypeWrapper(custom)
 
   ContractPromise.create(
     self,
     "accept_offer",
-    args,
+    custom,
     FIVE_TERAGAS,
     u128.Zero
   )
-
-
+  auctionNfts.delete(maxTokenId.first);
+  maxTokenId.pop();
+  maxVotes.pop();
   return true;
 }
 
 export function getMaxToken() : string {
-  return maxTokenId;
+  return maxTokenId.first;
+}
+
+export function getMaxVotes() : i32 {
+  return maxVotes.first;
 }
 
 export function getOwner(tokenId : string) : string {
