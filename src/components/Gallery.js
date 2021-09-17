@@ -78,13 +78,12 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					// 	nft_contract_token: "market.naik899.testnet" + DELIMITER + tokenId
 					// });
 					// console.log('\n\n get_sale result for nft', sale, '\n\n');
-					debugger;
+					debugger
+
+
 
 					let tokenInfo = tokenId;
-					const bidsInfo = await getSaleInfo(window.mp.account, tokenInfo);
-					setBidsInfo(bidsInfo);
-					//  approve nft to itself  , this will add it to sales 
-					//	await nftApprove(window.mp.account, tokenId);
+
 
 					// sales conditions add.
 					const newSaleConditions = {
@@ -94,7 +93,15 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					setSaleConditions(newSaleConditions);
 					setPrice('');
 					setFT('near');
-					handleSaleUpdate(window.mp.account, tokenId, newSaleConditions);
+					handleSaleUpdate(account, tokenId, newSaleConditions);
+
+
+					const bidsInfo = await getSaleInfo(account, tokenInfo);
+					setBidsInfo(bidsInfo);
+					//  approve nft to itself  , this will add it to sales 
+					//	await nftApprove(window.mp.account, tokenId);
+
+					
 					//localStorage.setItem("stage", "transferred");
 
 					await window.ah.contract.addNft({

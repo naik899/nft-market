@@ -47,6 +47,7 @@ export const handleMint = async (account, royalties, media, validMedia, title, d
 
 // vote action
 export const nftVote = async (account, token_id) => {
+    debugger
     const tId = token_id.replace("token-", "")
     await account.functionCall("auction.gyanlakshmi.testnet", 'vote', {
         tokenId: tId
@@ -62,9 +63,17 @@ export const nftApprove = async (account, token_id) => {
 };
 
 export const getSaleInfo = async (account, token_id) => {
-    const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + "||" + token_id }).catch(() => { });
+    debugger
+    try{
+        const sale = await account.viewFunction(marketId, 'get_sale', { nft_contract_token: contractId + "||" + token_id })
+        debugger
+        return sale.bids;
+    }
+catch (error) {
+    debug
+    console.log(error)
+    }
     
-    return sale.bids;
 };
 
 export const nftTransfer = async (account, tokenId) => {

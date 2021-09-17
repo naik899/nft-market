@@ -31,7 +31,7 @@ export const loadItems = (account) => async ({ update, getState }) => {
         from_index: '0',
         limit: 50
     });
-
+debugger
    // let currentVotes1 = await window.ah..viewFunction("auction.gyanlakshmi.testnet", 'getActiveAuctionsTokenVotes');
 const currentVotes = await window.ah.contract.getActiveAuctionsTokenVotes();
 
