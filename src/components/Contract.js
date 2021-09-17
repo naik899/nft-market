@@ -26,7 +26,7 @@ export const Contract = ({ near, update, account }) => {
 	return <>
 		<h4>Mint Something</h4>
 		<input className="full-width" placeholder="Image Link" value={media} onChange={(e) => setMedia(e.target.value)} />
-		<img height="400" src={media} onLoad={() => setValidMedia(true)} onError={() => setValidMedia(true)} />
+		<img crossOrigin="anonymous" height="400" src={media} onLoad={() => setValidMedia(true)} onError={() => setValidMedia(true)} />
 		
 		{ !validMedia && <p>Image link is invalid.</p> }
 

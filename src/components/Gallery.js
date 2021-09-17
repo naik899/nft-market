@@ -74,11 +74,6 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 
 					let DELIMITER = "||";
-					// const sale = await alice.viewFunction(window.mp.contract, 'get_sale', {
-					// 	nft_contract_token: "market.naik899.testnet" + DELIMITER + tokenId
-					// });
-					// console.log('\n\n get_sale result for nft', sale, '\n\n');
-					debugger
 
 
 
@@ -93,16 +88,16 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					setSaleConditions(newSaleConditions);
 					setPrice('');
 					setFT('near');
-					handleSaleUpdate(account, tokenId, newSaleConditions);
+					await handleSaleUpdate(window.mp.account, tokenId, newSaleConditions);
 
 
-					const bidsInfo = await getSaleInfo(account, tokenInfo);
+					const bidsInfo = await getSaleInfo(window.mp.account, tokenInfo);
 					setBidsInfo(bidsInfo);
 					//  approve nft to itself  , this will add it to sales 
 					//	await nftApprove(window.mp.account, tokenId);
 
 					
-					//localStorage.setItem("stage", "transferred");
+					localStorage.setItem("stage", "transferred");
 
 					await window.ah.contract.addNft({
 						accountId: window.mp.accountIdMp,
@@ -111,6 +106,12 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 					})
 
 
+				}
+				else if(stage === "transferred")
+				{
+					let tokenInfo = tokenId;
+					const bidsInfo = await getSaleInfo(window.mp.account, tokenInfo);
+					setBidsInfo(bidsInfo);
 				}
 
 
@@ -175,7 +176,14 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 							<Row>
 								<Col md /* style={{display:'flex' , justifyContent:'center'}} */>
 									<Card key={token_id} style={{ margin: '20px', boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)" }} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)}>
-										<Card.Img height="400" width="400" variant="top" src={media} />
+										{/* <Card.Img height="400" width="400" variant="top" src={media}  crossOrigin="Anonymous"/> */}
+
+										<img
+  crossOrigin="anonymous" className="card-img-top"
+  src={media} 
+  style={{height: '400', width: 400}}
+  alt="img"
+/>
 										<Card.Body>
 											<Card.Title>{title}
 											</Card.Title>
@@ -290,7 +298,13 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 								<Col key={token_id} sm /* style={{display:'flex' , justifyContent:'center'}} */>
 									<Card style={{ width: '18rem', margin: '20px', boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)" }} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)}>
-										<Card.Img height="200" width="200" variant="top" src={media} />
+									<img
+  crossOrigin="anonymous" className="card-img-top"
+  src={media} 
+  style={{height: '200', width: '200'}}
+  alt="img"
+/>
+										
 										<Card.Body>
 											<Card.Title>{title} {token_id}<span style={{ float: "right", fontSize: "0.75em", lineHeight: "24px" }}>
 												<svg width="24px" height="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 288"><g id="Layer_1" data-name="Layer 1"><path d="M187.58,79.81l-30.1,44.69a3.2,3.2,0,0,0,4.75,4.2L191.86,103a1.2,1.2,0,0,1,2,.91v80.46a1.2,1.2,0,0,1-2.12.77L102.18,77.93A15.35,15.35,0,0,0,90.47,72.5H87.34A15.34,15.34,0,0,0,72,87.84V201.16A15.34,15.34,0,0,0,87.34,216.5h0a15.35,15.35,0,0,0,13.08-7.31l30.1-44.69a3.2,3.2,0,0,0-4.75-4.2L96.14,186a1.2,1.2,0,0,1-2-.91V104.61a1.2,1.2,0,0,1,2.12-.77l89.55,107.23a15.35,15.35,0,0,0,11.71,5.43h3.13A15.34,15.34,0,0,0,216,201.16V87.84A15.34,15.34,0,0,0,200.66,72.5h0A15.35,15.35,0,0,0,187.58,79.81Z" /></g></svg>

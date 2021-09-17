@@ -57,13 +57,14 @@ await keyStore.setKey("testnet", "auction.gyanlakshmi.testnet", keyPair);
 export async function initContract2() {
 
   //Marketplace Contract Initialisation - add marketplace json
+  let marketAccount = "market.naik899.testnet";
 const keyStore = new keyStores.InMemoryKeyStore();
 const PRIVATE_KEY =
-  "ed25519:39CMPv7zEujycEEQEBAUjbQotr6idaDYmqjA6HyPqJvSmwtc5ivu3EcbSj5gCmb2mJYwfD1z17sNX4x7DUskBRca";
+  "ed25519:fCYgK9DSX5x7DcwoR4mZFNyBXks6EPtaQt99YaLLBUuGb94dTAnF3ZaSUX1hY9zokyYXV2WFKWgEQf3XCYwxGbb";
 // creates a public / private key pair using the provided private key
 const keyPair = KeyPair.fromString(PRIVATE_KEY);
 // adds the keyPair you created to keyStore
-await keyStore.setKey("testnet", "market.gyanlakshmi.testnet", keyPair);
+await keyStore.setKey("testnet", marketAccount, keyPair);
  // debugger;
   // Initialize connection to the NEAR testnet
   const config = { 
@@ -83,7 +84,7 @@ await keyStore.setKey("testnet", "market.gyanlakshmi.testnet", keyPair);
   // Initializing Wallet based Account. It can work with NEAR testnet wallet that
   // is hosted at https://wallet.testnet.near.org
   window.mp = {}
-  const accountMp = await near.account("market.gyanlakshmi.testnet");
+  const accountMp = await near.account(marketAccount);
   //window.ah.walletConnection = new WalletConnection(near)
 
   // // Getting the Account ID. If still unauthorized, it's just empty string
@@ -92,7 +93,7 @@ await keyStore.setKey("testnet", "market.gyanlakshmi.testnet", keyPair);
 window.mp.account = accountMp
   //debugger;
   // Initializing our contract APIs by contract name and configuration
-  window.mp.contract = await new Contract(accountMp, "market.gyanlakshmi.testnet", {
+  window.mp.contract = await new Contract(accountMp, marketAccount, {
     // View methods are read only. They don't modify the state, but usually return some value.
     viewMethods: ['getHighestVoted', 'getMaxToken', 'getOwner', 'getActiveAuctionsVotes', 'getActiveAuctionsTokenIds'],
     // Change methods can modify the state. But you don't receive the returned value when called.

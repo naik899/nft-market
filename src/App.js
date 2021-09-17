@@ -50,7 +50,7 @@ const App = () => {
 
 		<div id="menu">
 			<div>
-				<img style={{ opacity: signedIn ? 1 : 0.25 }, { height: "80px" }, { width: "120px" }} src="https://s3.ap-south-1.amazonaws.com/emartshop.in/near_logo.png" crossOrigin="anonymous"
+				<img style={{ opacity: signedIn ? 1 : 0.25 }, { height: "80px" }, { width: "120px" }} src="https://cqt-swagger.s3.ap-south-1.amazonaws.com/nfts/logo.jpg" crossOrigin="anonymous"
 					onClick={() => setProfile(!profile)}
 				/>
 			</div>
