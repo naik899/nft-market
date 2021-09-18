@@ -98,13 +98,13 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 					
 					localStorage.setItem("stage", "transferred");
-
+					alert("Now we will add nft to Auction House!");
 					await window.ah.contract.addNft({
 						accountId: window.mp.accountIdMp,
 						tokenId: tokenId.replace("token-", ""),
 						owner: account.accountId
 					})
-
+					alert("NFT added to Auction House!");
 
 				}
 				else if(stage === "transferred")
@@ -151,19 +151,19 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 		return <Token {...{ dispatch, account, token }} />;
 	}
 
-	let myTokens = []
+	/* let myTokens = []
 
 	if (tokens.length) {
 		myTokens.push(tokens[0])
 		//myTokens.push(tokens.find(r => r.token_id === 'token-1631718110381'))
-	}
+	} */
 
 
 	return <>
 
 		{
 
-			tab === 1 && tokens.length && myTokens.map(({
+			tab === 1 && tokens.length && maxVotedTokens.map(({
 				metadata: { media, title, description },
 				owner_id,
 				token_id,
@@ -178,10 +178,10 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 									<Card key={token_id} style={{ margin: '20px', boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)" }} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)}>
 										{/* <Card.Img height="400" width="400" variant="top" src={media}  crossOrigin="Anonymous"/> */}
 
-										<img
+										<img width="400" height="400"
   crossOrigin="anonymous" className="card-img-top"
   src={media} 
-  style={{height: '400', width: 400}}
+ 
   alt="img"
 />
 										<Card.Body>
@@ -189,7 +189,7 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 											</Card.Title>
 											{/* <Card.Subtitle>Min Bid Price {extra} NEAR</Card.Subtitle> */}
 											<Card.Text>
-												{description} {owner_id}
+												{description}
 											</Card.Text>
 											{
 												accountId.length > 0 && <>
@@ -298,10 +298,9 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 
 								<Col key={token_id} sm /* style={{display:'flex' , justifyContent:'center'}} */>
 									<Card style={{ width: '18rem', margin: '20px', boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)" }} onClick={() => history.pushState({}, '', window.location.pathname + '?t=' + token_id)}>
-									<img
+									<img width="200" height="200"
   crossOrigin="anonymous" className="card-img-top"
   src={media} 
-  style={{height: '200', width: '200'}}
   alt="img"
 />
 										
@@ -314,14 +313,33 @@ export const Gallery = ({ app, views, update, contractAccount, account, loading,
 											</span></Card.Title>
 											{/* <Card.Subtitle>Min Bid Price {extra} NEAR</Card.Subtitle> */}
 											<Card.Text>
-												{description} {owner_id}
+												{description}
 											</Card.Text>
 
 											<div>
+											<Button variant="secondary" style={{ backgroundColor: "#0072CE", float: "left" }} disabled={!voteButtonDisabled}
+													>
+													Claim
+												</Button>
+
 												<Button variant="primary" style={{ backgroundColor: "#0072CE", float: "right" }} disabled={voteButtonDisabled}
 													onClick={() => nftVote(account, token_id)}>
 													Vote
 												</Button>
+
+												{
+									Object.keys(bids).length > 0 && <>
+										<h4>Offers</h4>
+										{
+											Object.entries(bids).map(([ft_token_id, { owner_id, price }]) => <div className="offers" key={ft_token_id}>
+												<div>
+													{price === '0' ? 'open' : formatNearAmount(price, 4)} - {token2symbol[ft_token_id]}
+												</div>
+												<button onClick={() => handleAcceptOffer(token_id, ft_token_id)}>Accept</button>
+											</div>)
+										}
+									</>
+								}
 
 												{/* { 
 									 <>
