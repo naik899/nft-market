@@ -31,16 +31,17 @@ export const loadItems = (account) => async ({ update, getState }) => {
         from_index: '0',
         limit: 50
     });
-debugger
+
    // let currentVotes1 = await window.ah..viewFunction("auction.gyanlakshmi.testnet", 'getActiveAuctionsTokenVotes');
 const currentVotes = await window.ah.contract.getActiveAuctionsTokenVotes();
 
     tokens = tokens.filter(({ owner_id }) => !BAD_OWNER_ID.includes(owner_id));
 
-    let maxVotedTokenId = await contractAccount.viewFunction("auction.gyanlakshmi.testnet", 'getMaxToken');
+    let maxVotedTokenId = await window.ah.contract.getMaxToken();
+    //await contractAccount.viewFunction("auction.gyanlakshmi.testnet", 'getMaxToken');
     console.log("max voted token id is " + maxVotedTokenId)
-    const maxVotedTokens = tokens.filter(({ token_id }) => maxVotedTokenId === token_id)
-
+    const maxVotedTokens = tokens.filter(({ token_id }) => ("token-"+maxVotedTokenId) === token_id)
+    
     update('views', { tokens, maxVotedTokens, currentVotes })
     return { tokens, maxVotedTokens, currentVotes }
 };
