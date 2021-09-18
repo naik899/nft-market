@@ -155,7 +155,7 @@ export function getHighestVoted() : string {
 
 export function closeAuction(): bool {
   //Cross contract call
-  const self = "markeet.naik899.testnet"
+  const self = "market.naik899.testnet"
   const token = "token-"+maxTokenId.first;
   const custom = new CustomType("naik899.testnet", token, "near");
   const GAS = 200*ONE_TERAGAS;
