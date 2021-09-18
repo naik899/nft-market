@@ -154,10 +154,13 @@ impl Contract {
 
     pub fn accept_offer(
         &mut self,
-        nft_contract_id: ValidAccountId,
-        token_id: String,
-        ft_token_id: ValidAccountId,
+        arg1: ValidAccountId,
+        arg2: String,
+        arg3: ValidAccountId,
     ) {
+        let nft_contract_id = arg1;
+        let token_id = arg2;
+        let ft_token_id = arg3;
         let contract_id: AccountId = nft_contract_id.into();
         let contract_and_token_id = format!("{}{}{}", contract_id.clone(), DELIMETER, token_id.clone());
         // remove bid before proceeding to process purchase
