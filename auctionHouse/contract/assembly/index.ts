@@ -77,7 +77,6 @@ export class AuctionHouse {
 
 }
 const ONE_TERAGAS = 1000000000000
-const FIVE_TERAGAS = 5 * ONE_TERAGAS
 
 @nearBindgen
 class CustomType {
@@ -98,17 +97,17 @@ class CustomTypeWrapper {
 }
 
 export const auctionNfts = new PersistentMap<string, AuctionHouse>("n");
-export const tokenIds = new PersistentVector<string>("t");
+export const tokenIds1 = new PersistentVector<string>("t1");
 export const maxTokenId = new PersistentVector<string>("mt1");
 export const maxVotes = new PersistentVector<i32>("mv1");
-// export let maxTokenId:string = "None";
-// export let maxVotes:i32 = 0;
+export let maxTokenId1:string = "None";
+export let maxVotes1:i32 = 0;
 
 
 export function addNft(tokenId: string, owner: string): string {
     const nft = new AuctionHouse(tokenId, u128.Zero, owner);
     auctionNfts.set(tokenId, nft);
-    tokenIds.push(tokenId);
+    tokenIds1.push(tokenId);
     return nft.tokenId;
 }
 
@@ -117,67 +116,56 @@ export function vote(tokenId: string) : i32 {
     
     if(nft != null){
       nft.votes = nft.votes+1;
-      if(maxVotes.isEmpty){
-        maxVotes.push(nft.votes);
-        maxTokenId.push(tokenId);
-      }
-      else if(nft.votes > maxVotes.first){
-        maxVotes.pop();
-        maxVotes.push(nft.votes);
-        maxTokenId.pop();
-        maxTokenId.push(tokenId);
-      }
       auctionNfts.set(tokenId, nft);
-      
-      return maxVotes.first;
+      return nft.votes;
     }
     return 0;
 }
 
-// export function getHighestVoted() : string {
+export function getHighestVoted() : string {
 
-//     let maxToken = tokenIds[0];
-//     for( let i=0; i < tokenIds.length; i++) {
-//         const token = tokenIds[i];
-//         const nft = auctionNfts.get(token);
-//         let maxVotes:u32 = 0;
-//         if(nft != null) {
-//           if(nft.nftState == true){
-//             if(nft.votes > maxVotes){
-//                 maxVotes = nft.votes;
-//                 maxToken = nft.tokenId;
-//             }
-//         }
-//         }
-//         else {
-//           logging.log("NFT is null");
-//         }
+    for( let i=0; i < tokenIds1.length; i++) {
+        const token = tokenIds1[i];
+        const nft = auctionNfts.get(token);
+        let maxVotes1:i32 = 0;
+        if(nft != null) {
+            if(nft.votes > maxVotes1){
+              if(maxVotes.isEmpty){
+                maxVotes.push(nft.votes);
+                maxTokenId.push(nft.tokenId);
+                maxVotes1 = nft.votes;
+              }
+              else {
+                maxVotes.pop();
+                maxVotes.push(nft.votes);
+                maxTokenId.pop();
+                maxTokenId.push(nft.tokenId);
+                maxVotes1 = nft.votes;
+              }
+            }
+        }
+        else {
+          logging.log("NFT is null");
+        }
         
-//     }
-//     const nftMax = auctionNfts.get(maxToken);
-//     if(nftMax != null) {
-//       nftMax.nftState = false;
-//       auctionNfts.set(maxToken, nftMax);
-//       maxTokenId = maxToken;
-//       return maxToken;
-//     }
-//     return "None";
+    }
+    return maxTokenId.first;
     
-// }
+}
 
-export function closeAuction(marketId: string, contractId: string): bool {
+export function closeAuction(): bool {
   //Cross contract call
-  const self = marketId
+  const self = "markeet.naik899.testnet"
   const token = "token-"+maxTokenId.first;
-  const custom = new CustomType(contractId, token, "near");
-  
+  const custom = new CustomType("naik899.testnet", token, "near");
+  const GAS = 200*ONE_TERAGAS;
   const args = new CustomTypeWrapper(custom)
 
   ContractPromise.create(
     self,
     "accept_offer",
     custom,
-    FIVE_TERAGAS,
+    GAS,
     u128.Zero
   )
   auctionNfts.delete(maxTokenId.first);
@@ -211,13 +199,11 @@ export function getActiveAuctionsTokenIds(): Array<string> {
   
   let tempAuctionMap = new Array<string>();
 
-  for(let i =0; i< tokenIds.length; i++){
-      const nft = auctionNfts.get(tokenIds[i]);
+  for(let i =0; i< tokenIds1.length; i++){
+      const nft = auctionNfts.get(tokenIds1[i]);
 
       if(nft != null){
-        if(nft.nftState == true){
           tempAuctionMap.push(nft.tokenId)
-        }
       }
 
   }
@@ -229,8 +215,8 @@ export function getActiveAuctionsVotes(): Array<u32> {
   
   let tempAuctionMap = new Array<u32>();
 
-  for(let i =0; i< tokenIds.length; i++){
-      const nft = auctionNfts.get(tokenIds[i]);
+  for(let i =0; i< tokenIds1.length; i++){
+      const nft = auctionNfts.get(tokenIds1[i]);
 
       if(nft != null){
         if(nft.nftState == true){
@@ -247,8 +233,8 @@ export function getActiveAuctionsTokenVotes(): Map<string, u32> {
 
   let tempAuctionMap = new Map<string, u32>();
 
-  for(let i =0; i< tokenIds.length; i++){
-      const nft = auctionNfts.get(tokenIds[i]);
+  for(let i =0; i< tokenIds1.length; i++){
+      const nft = auctionNfts.get(tokenIds1[i]);
 
       if(nft != null){
         if(nft.nftState == true){
